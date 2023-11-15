@@ -50,10 +50,11 @@ export default class CandidatePage {
     cy.get('input[type="file"]').selectFile('cypress/fixtures/file.txt', { force: true })
     cy.get('.oxd-form-actions').contains('Save').click({ force: true })
     cy.wait(4000)
-    // cy.contains('file.txt');
   }
   downladFile() {
     cy.get('.orangehrm-file-preview').click({ force: true })
+  }
+  verifyFileContent(){
     cy.readFile('cypress/downloads/file.txt').then((fileContent) => {
       expect(fileContent).to.equal('some content');
     });

@@ -59,6 +59,7 @@ When("upload file and download it", () => {
     candidatePageObject.findVacancy(vacancyName)
     candidatePageObject.uploadFileForApplicationInitiated()
     candidatePageObject.downladFile()
+    candidatePageObject.verifyFileContent
 })
 
 When("shortlist the candidate", () => {
