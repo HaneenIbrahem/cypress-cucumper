@@ -3,14 +3,25 @@ import addJobTitle from "../../support/helpers/jobTitleHelper";
 import addNewVacancy from "../../support/helpers/vacancyHelper";
 import addNewCandidate from "../../support/helpers/candidateHelper";
 import CandidatePage from "../../support/page-objects/candidatesPage";
-import ShortlistCandidate from "../../support/helpers/shortlistHelper";
-import ScheduledInterviewCandidate from "../../support/helpers/scheduledInterviewHelper";
+
+import { padTo2Digits } from "../../support/helpers/format";
+// const date = (new Date());
+const today = new Date();  
+const nextWeek = new Date(today);
+nextWeek.setDate(today.getDate() + 7);
+
+const dayNextWeek = [
+    nextWeek.getFullYear(),
+    padTo2Digits(nextWeek.getMonth() + 1),
+    padTo2Digits(nextWeek.getDate()),
+].join('-');
 
 const candidatePageObject: CandidatePage = new CandidatePage()
 let jobTitleId: number
 let jobTitle: string
 let employeeId: number
 let empNumber: number
+let empName: string
 let vacancyId: number
 let vacancyName: string
 let candidateId: number
@@ -31,6 +42,7 @@ Given("create employee with login details", () => {
         cy.addNewEmployee(dataEmp.addEmployee.firstName, dataEmp.addEmployee.middleName, dataEmp.addEmployee.lastName, dataEmp.addEmployee.empPicture, dataEmp.addEmployee.employeeId).then((response) => {
             empNumber = response.body.data.empNumber
             employeeId = response.body.data.employeeId
+            empName = response.body.data.firstName + response.body.data.middleName + response.body.data.lastName
         }).then(() => {
             cy.addNewUser(dataEmp.addUser.username, dataEmp.addUser.password, dataEmp.addUser.status, dataEmp.addUser.userRoleId, empNumber)
         })
@@ -65,21 +77,30 @@ When("upload file and download it", () => {
 })
 
 When("shortlist the candidate", () => {
-    ShortlistCandidate.shortlistCandidateViaAPI(candidateId)
+    candidatePageObject.findVacancy(vacancyName)
+    candidatePageObject.shortList()
+    candidatePageObject.statusAssertion('Shortlisted')
 });
 
 When("schedule an interview for the candidate", () => {
-    ScheduledInterviewCandidate.ScheduledInterviewCandidateViaAPI(candidateId, empNumber)
+    cy.fixture('interview').as('iData')
+    cy.get('@iData').then((dataInterview: any) => {
+        candidatePageObject.findVacancy(vacancyName)
+        candidatePageObject.scheduleInterview(empName, dataInterview.Interview_Detauls.interviewTitle, dayNextWeek)
+        candidatePageObject.statusAssertion('Interview Scheduled')
+    });
 });
 
 When("change the candidate status to Interview Passed", () => {
     candidatePageObject.findVacancy(vacancyName)
     candidatePageObject.markInterviewPassed()
+    candidatePageObject.statusAssertion('Interview Passed')
 });
 
 When("Change the candidate status to Hired", () => {
     candidatePageObject.findVacancy(vacancyName)
     candidatePageObject.markCandidateHired()
+    candidatePageObject.statusAssertion('Hired')
 });
 
 Then("delete employee + job title + vacancy", () => {

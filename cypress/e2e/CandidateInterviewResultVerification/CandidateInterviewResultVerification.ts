@@ -1,7 +1,6 @@
 import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
 import addJobTitle from "../../support/helpers/jobTitleHelper";
 import addNewVacancy from "../../support/helpers/vacancyHelper";
-import LoginPage from '../../support/page-objects/loginPage'
 import addNewCandidate from "../../support/helpers/candidateHelper";
 import ShortlistCandidate from "../../support/helpers/shortlistHelper"
 import ScheduledInterviewCandidate from "../../support/helpers/scheduledInterviewHelper";
@@ -79,8 +78,8 @@ When("Change the candidate status to Hired", () => {
   candidatePageObject.markCandidateHired()
 });
 
-Then("delete employee + job title + vacancy {string}", (status) => {
-  cy.get('.orangehrm-recruitment-status > .oxd-text', { timeout: 40000 }).should('contain', status);
+Then("delete employee + job title + vacancy {string}", (status: string) => {
+  candidatePageObject.statusAssertion(status)
   cy.deleteEmployee(empNumber);
   cy.deleteJobTitle(jobTitleId);
   cy.deleteCandidate(candidateId);

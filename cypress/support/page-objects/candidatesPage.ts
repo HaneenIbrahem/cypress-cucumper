@@ -13,6 +13,11 @@ export default class CandidatePage {
     inputFile: () => cy.get('input[type="file"]'),
     savBtn: () => cy.get('.oxd-form-actions').contains('Save'),
     download: () => cy.get('.orangehrm-file-preview'),
+    shortlist:()=> cy.get('.oxd-button--success'),
+    schedule:()=> cy.get('.oxd-button--success'),
+    interviewTitle:()=> cy.get(':nth-child(2) > .oxd-grid-3 > :nth-child(1) > .oxd-input-group > :nth-child(2) > .oxd-input'),
+    interviewer:()=> cy.get('.oxd-autocomplete-text-input > input'),
+    date:()=> cy.get('.oxd-date-input > .oxd-input'),
 
   }
   findVacancy(vacancyName: any) {
@@ -63,7 +68,25 @@ export default class CandidatePage {
       expect(fileContent).to.equal('some content');
     });
   }
+  statusAssertion(status: string){
+    cy.get('.orangehrm-recruitment-status > .oxd-text', { timeout: 40000 }).should('contain', status);
+  }
   shortList() {
-
+    this.elements.shortlist().click({ force: true })
+    this.elements.loader().should('not.exist')
+    cy.wait(4000)
+    this.elements.savBtn().click({ force: true })    
+    this.elements.loader().should('not.exist')
+  }
+  scheduleInterview(empName: string, interviewTitle: string, dayNextWeek: string){
+    this.elements.schedule().click({ force: true })
+    this.elements.interviewTitle().type(interviewTitle)
+    this.elements.interviewer().type(empName)
+    cy.contains('.oxd-autocomplete-option', 'Searching....').should('exist')
+    cy.contains('.oxd-autocomplete-option', 'Searching....').should('not.exist')
+    cy.get('.oxd-autocomplete-option').should('be.visible').click({ force: true })
+    this.elements.date().type(dayNextWeek)
+    this.elements.saveBtn().click({ force: true })
+    this.elements.loader().should('not.exist')
   }
 }
