@@ -14,6 +14,8 @@ let empNumber: number
 let vacancyId: number
 let vacancyName: string
 let candidateId: number
+let filePath: string = 'cypress/fixtures/file.txt'
+let downladFilePath: string = 'cypress/downloads/file.txt'
 
 Given("I navigate to orangeHRM website", () => {
     cy.visit("/web/index.php/auth/login");
@@ -57,9 +59,9 @@ Given("create new candidate", () => {
 
 When("upload file and download it", () => {
     candidatePageObject.findVacancy(vacancyName)
-    candidatePageObject.uploadFileForApplicationInitiated()
+    candidatePageObject.uploadFile(filePath)
     candidatePageObject.downladFile()
-    candidatePageObject.verifyFileContent
+    candidatePageObject.verifyFileContent(downladFilePath)
 })
 
 When("shortlist the candidate", () => {

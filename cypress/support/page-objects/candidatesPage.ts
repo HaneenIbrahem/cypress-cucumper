@@ -9,6 +9,10 @@ export default class CandidatePage {
     failBtn: () => cy.get('.orangehrm-recruitment-actions > :nth-child(2)'),
     jobOfferBtn: () => cy.get('.oxd-button--success'),
     hiredBtn: () => cy.get('.oxd-button--success'),
+    editSwitch: () => cy.get('.oxd-switch-input'),
+    inputFile: () => cy.get('input[type="file"]'),
+    savBtn: () => cy.get('.oxd-form-actions').contains('Save'),
+    download: () => cy.get('.orangehrm-file-preview'),
 
   }
   findVacancy(vacancyName: any) {
@@ -45,18 +49,21 @@ export default class CandidatePage {
     this.elements.saveBtn().click({ force: true })
     cy.wait(1000)
   }
-  uploadFileForApplicationInitiated() {
-    cy.get('.oxd-switch-input').click({ force: true });
-    cy.get('input[type="file"]').selectFile('cypress/fixtures/file.txt', { force: true })
-    cy.get('.oxd-form-actions').contains('Save').click({ force: true })
+  uploadFile(filePath: string) {
+    this.elements.editSwitch().click({ force: true });
+    this.elements.inputFile().selectFile(filePath, { force: true })
+    this.elements.savBtn().click({ force: true })
     cy.wait(4000)
   }
   downladFile() {
-    cy.get('.orangehrm-file-preview').click({ force: true })
+    this.elements.download().click({ force: true })
   }
-  verifyFileContent(){
-    cy.readFile('cypress/downloads/file.txt').then((fileContent) => {
+  verifyFileContent(filePath: string) {
+    cy.readFile(filePath).then((fileContent) => {
       expect(fileContent).to.equal('some content');
     });
+  }
+  shortList() {
+
   }
 }
