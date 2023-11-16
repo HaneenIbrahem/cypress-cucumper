@@ -42,7 +42,7 @@ Given("create employee with login details", () => {
         cy.addNewEmployee(dataEmp.addEmployee.firstName, dataEmp.addEmployee.middleName, dataEmp.addEmployee.lastName, dataEmp.addEmployee.empPicture, dataEmp.addEmployee.employeeId).then((response) => {
             empNumber = response.body.data.empNumber
             employeeId = response.body.data.employeeId
-            empName = response.body.data.firstName + response.body.data.middleName + response.body.data.lastName
+            empName = response.body.data.firstName + " " + response.body.data.middleName + " " +  response.body.data.lastName
         }).then(() => {
             cy.addNewUser(dataEmp.addUser.username, dataEmp.addUser.password, dataEmp.addUser.status, dataEmp.addUser.userRoleId, empNumber)
         })
