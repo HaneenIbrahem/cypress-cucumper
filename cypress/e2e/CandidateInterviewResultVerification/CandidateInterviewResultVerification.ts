@@ -14,11 +14,8 @@ let empNumber: number
 let vacancyId: number
 let vacancyName: string
 let candidateId: number
-Given("I navigate to orangeHRM website", () => {
-  cy.visit("/web/index.php/auth/login");
-});
 
-Given("login to the website", () => {
+Given("Admin navigate to orangeHRM website and login", () => {
   cy.login('Admin', 'admin123')
 });
 
@@ -34,55 +31,57 @@ Given("create employee with login details", () => {
   })
 });
 
-Given("create new job title", ()=>{
+Given("create new job title", () => {
   addJobTitle.addNewJobTitleViaAPI().then(jobTitleInfo => {
     jobTitleId = jobTitleInfo.id;
     jobTitle = jobTitleInfo.title;
   });
 });
 
-Given("create new job vacancy", ()=>{
-  addNewVacancy.addNewVacancyViaAPI(jobTitleId, empNumber).then(vacancyInfo =>{
+Given("create new job vacancy", () => {
+  addNewVacancy.addNewVacancyViaAPI(jobTitleId, empNumber).then(vacancyInfo => {
     vacancyId = vacancyInfo.vacancyId
     vacancyName = vacancyInfo.vacancyName
-    })
+  })
 });
 
-Given("create new candidate", ()=>{
-  addNewCandidate.addNewCandidateViaAPI(vacancyId).then(candidateInfo =>{
+Given("create new candidate", () => {
+  addNewCandidate.addNewCandidateViaAPI(vacancyId).then(candidateInfo => {
     candidateId = candidateInfo.candidateId
-    })
+  })
 });
 
-Given("shortlist the candidate", ()=>{
+Given("shortlist the candidate", () => {
   ShortlistCandidate.shortlistCandidateViaAPI(candidateId)
 });
 
-Given("schedule an interview for the candidate", ()=>{
+Given("schedule an interview for the candidate", () => {
   ScheduledInterviewCandidate.ScheduledInterviewCandidateViaAPI(candidateId, empNumber)
 });
 
 When("change the candidate status to Interview Passed", () => {
-  candidatePageObject.findVacancy(vacancyName) 
+  candidatePageObject.findVacancy(vacancyName)
   candidatePageObject.markInterviewPassed()
 });
 
 When("change the candidate status to Interview Failed", () => {
-  candidatePageObject.findVacancy(vacancyName) 
+  candidatePageObject.findVacancy(vacancyName)
   candidatePageObject.markInterviewFailed()
 });
 
 When("Change the candidate status to Hired", () => {
-  candidatePageObject.findVacancy(vacancyName) 
+  candidatePageObject.findVacancy(vacancyName)
   candidatePageObject.markInterviewPassed()
   candidatePageObject.markCandidateHired()
 });
 
-Then("delete employee + job title + vacancy {string}", (status: string) => {
-  candidatePageObject.statusAssertion(status)
+Then("check candidate status {string}", (status: string) => {
+  candidatePageObject.checkCandidateStatusIExsit(status)
+});
+
+afterEach(() => {
   cy.deleteEmployee(empNumber);
   cy.deleteJobTitle(jobTitleId);
   cy.deleteCandidate(candidateId);
   cy.deleteVacancy(vacancyId);
 });
-

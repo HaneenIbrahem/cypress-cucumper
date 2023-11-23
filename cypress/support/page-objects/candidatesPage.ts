@@ -46,19 +46,24 @@ export default class CandidatePage {
   }
   markCandidateHired() {
     this.elements.jobOfferBtn().eq(1).click({ force: true })
-    cy.wait(1000)
+    this.elements.loader().should('exist')
+    this.elements.loader().should('not.exist')
     this.elements.saveBtn().click({ force: true })
-    cy.wait(1000)
+    this.elements.loader().should('exist')
+    this.elements.loader().should('not.exist')
     this.elements.hiredBtn().click({ force: true })
-    cy.wait(1000)
+    this.elements.loader().should('exist')
+    this.elements.loader().should('not.exist')
     this.elements.saveBtn().click({ force: true })
-    cy.wait(1000)
+    this.elements.loader().should('exist')
+    this.elements.loader().should('not.exist')
   }
   uploadFile(filePath: string) {
     this.elements.editSwitch().click({ force: true });
     this.elements.inputFile().selectFile(filePath, { force: true })
     this.elements.savBtn().click({ force: true })
-    cy.wait(4000)
+    this.elements.loader().should('exist')
+    this.elements.loader().should('not.exist')
   }
   downladFile() {
     this.elements.download().click({ force: true })
@@ -68,14 +73,15 @@ export default class CandidatePage {
       expect(fileContent).to.equal('some content');
     });
   }
-  statusAssertion(status: string){
+  checkCandidateStatusIExsit(status: string){
     cy.get('.orangehrm-recruitment-status > .oxd-text', { timeout: 40000 }).should('contain', status);
   }
   shortList() {
     this.elements.shortlist().click({ force: true })
+    this.elements.loader().should('exist')
     this.elements.loader().should('not.exist')
-    cy.wait(4000)
     this.elements.savBtn().click({ force: true })    
+    this.elements.loader().should('exist')
     this.elements.loader().should('not.exist')
   }
   scheduleInterview(empName: string, interviewTitle: string, dayNextWeek: string){

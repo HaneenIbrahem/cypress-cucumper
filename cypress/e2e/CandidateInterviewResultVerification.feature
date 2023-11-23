@@ -1,8 +1,7 @@
 Feature: Candidate Interview Result Verification
 
   Background:
-    Given I navigate to orangeHRM website
-    And login to the website
+    Given Admin navigate to orangeHRM website and login
     And create employee with login details
     And create new job title
     And create new job vacancy
@@ -12,12 +11,12 @@ Feature: Candidate Interview Result Verification
 
   Scenario: Pass Interview
     When change the candidate status to Interview Passed
-    Then delete employee + job title + vacancy "Passed"
+    Then check candidate status "Passed"
 
   Scenario: Fail Interview
     When change the candidate status to Interview Failed
-    Then delete employee + job title + vacancy "Failed"
+    Then check candidate status "Failed"
 
     Scenario: Hired
         When Change the candidate status to Hired
-        Then delete employee + job title + vacancy "Hired"
+        Then check candidate status "Hired"

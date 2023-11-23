@@ -5,8 +5,7 @@ import addNewCandidate from "../../support/helpers/candidateHelper";
 import CandidatePage from "../../support/page-objects/candidatesPage";
 
 import { padTo2Digits } from "../../support/helpers/format";
-// const date = (new Date());
-const today = new Date();  
+const today = new Date();
 const nextWeek = new Date(today);
 nextWeek.setDate(today.getDate() + 7);
 
@@ -28,11 +27,7 @@ let candidateId: number
 let filePath: string = 'cypress/fixtures/file.txt'
 let downladFilePath: string = 'cypress/downloads/file.txt'
 
-Given("I navigate to orangeHRM website", () => {
-    cy.visit("/web/index.php/auth/login");
-});
-
-Given("login to the website", () => {
+Given("Admin navigate to orangeHRM website and login", () => {
     cy.login('Admin', 'admin123')
 });
 
@@ -42,7 +37,7 @@ Given("create employee with login details", () => {
         cy.addNewEmployee(dataEmp.addEmployee.firstName, dataEmp.addEmployee.middleName, dataEmp.addEmployee.lastName, dataEmp.addEmployee.empPicture, dataEmp.addEmployee.employeeId).then((response) => {
             empNumber = response.body.data.empNumber
             employeeId = response.body.data.employeeId
-            empName = response.body.data.firstName + " " + response.body.data.middleName + " " +  response.body.data.lastName
+            empName = response.body.data.firstName + " " + response.body.data.middleName + " " + response.body.data.lastName
         }).then(() => {
             cy.addNewUser(dataEmp.addUser.username, dataEmp.addUser.password, dataEmp.addUser.status, dataEmp.addUser.userRoleId, empNumber)
         })
@@ -73,37 +68,40 @@ When("upload file and download it", () => {
     candidatePageObject.findVacancy(vacancyName)
     candidatePageObject.uploadFile(filePath)
     candidatePageObject.downladFile()
-    candidatePageObject.verifyFileContent(downladFilePath)
 })
 
-When("shortlist the candidate", () => {
+When("shortlist the candidate {string}", (status: string) => {
     candidatePageObject.findVacancy(vacancyName)
     candidatePageObject.shortList()
-    candidatePageObject.statusAssertion('Shortlisted')
+    candidatePageObject.checkCandidateStatusIExsit(status)
 });
 
-When("schedule an interview for the candidate", () => {
+When("schedule an interview for the candidate {string}", (status: string) => {
     cy.fixture('interview').as('iData')
     cy.get('@iData').then((dataInterview: any) => {
         candidatePageObject.findVacancy(vacancyName)
         candidatePageObject.scheduleInterview(empName, dataInterview.Interview_Detauls.interviewTitle, dayNextWeek)
-        candidatePageObject.statusAssertion('Interview Scheduled')
+        candidatePageObject.checkCandidateStatusIExsit(status)
     });
 });
 
-When("change the candidate status to Interview Passed", () => {
+When("change the candidate status to Interview Passed {string}", (status: string) => {
     candidatePageObject.findVacancy(vacancyName)
     candidatePageObject.markInterviewPassed()
-    candidatePageObject.statusAssertion('Interview Passed')
+    candidatePageObject.checkCandidateStatusIExsit(status)
 });
 
-When("Change the candidate status to Hired", () => {
+When("Change the candidate status to Hired {string}", (status: string) => {
     candidatePageObject.findVacancy(vacancyName)
     candidatePageObject.markCandidateHired()
-    candidatePageObject.statusAssertion('Hired')
+    candidatePageObject.checkCandidateStatusIExsit(status)
 });
 
-Then("delete employee + job title + vacancy", () => {
+Then("check file content", () => {
+    candidatePageObject.verifyFileContent(downladFilePath)
+});
+
+afterEach(() => {
     cy.deleteEmployee(empNumber);
     cy.deleteJobTitle(jobTitleId);
     cy.deleteCandidate(candidateId);
