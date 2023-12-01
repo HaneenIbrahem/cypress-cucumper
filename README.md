@@ -1,6 +1,6 @@
 # Automation-E2E-Final-Task-Phase3/ Cucumper
 
-## Test case1: Candidate Interview Result Verification (Pass/Fail).
+## Test case 1: Candidate Interview Result Verification (Pass/Fail).
 
 **PreRequisites:**
 
@@ -21,7 +21,7 @@ Emphasize the modification of status only. Highlight the available button option
 
 ________________________________________________________________________
 
-## Test case: Verify that the user can upload a txt file for Application Initiated and Hired statuses.
+## Test case 2: Verify that the user can upload a txt file for Application Initiated and Hired statuses.
 
 **PreRequisites:**
 
