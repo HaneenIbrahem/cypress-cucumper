@@ -1,5 +1,5 @@
 # Automation-E2E-Final-Task-Phase3/ Cucumper
-________________________________________________________________________
+
 ## Test case1: Candidate Interview Result Verification (Pass/Fail).
 
 **PreRequisites:**
