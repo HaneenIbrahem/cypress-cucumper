@@ -21,7 +21,7 @@ Emphasize the modification of status only. Highlight the available button option
 
 ________________________________________________________________________
 
-## Test case 2: Verify that the user can upload a txt file for Application Initiated and Hired statuses 📤📄.
+## Test case 2: Verify that the user can upload a txt file for Application Initiated and Hired statuses 📤📄
 
 **PreRequisites:**
 
